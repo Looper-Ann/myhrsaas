@@ -9,10 +9,20 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {}
+export function getUserInfo(token) {
+  return request({
+    url: '/sys/profile',
+    method: 'post'
+  })
+}
 
 export const logout = () => {
   request({
     url: ''
   })
 }
+
+export const getUserDetailById = id =>
+  request({
+    url: `/sys/user/${id}`
+  })
