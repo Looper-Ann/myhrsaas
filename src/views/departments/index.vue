@@ -49,6 +49,7 @@ export default {
           manager: result.companyManage,
           id: ''
         }
+        console.log(result.depts)
         this.departs = transListToTreeData(result.depts, '')
       } catch (err) {
         this.$message.error('获取信息失败')
