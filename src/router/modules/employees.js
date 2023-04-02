@@ -5,7 +5,7 @@ import Layout from '@/layout'
 export default {
   // 路由规则
   path: '/employees', // 路由地址
-  name: 'employees', // name属性 后再做权限时候用到
+  // name: 'employees', // name属性 后再做权限时候用到
   component: Layout,
   children: [
     {
@@ -17,6 +17,17 @@ export default {
         title: '员工管理', // 为什么要有 title  因为左侧导航读取了这里的 title 属性
         icon: 'people'
       }
+    },
+    {
+      path: 'detail/:id',
+      hidden: true,
+      component: () => import('@/views/employees/details.vue')
+    },
+    {
+      path: 'print/:id?',
+      hidden: true,
+      component: () => import('@/views/employees/print.vue'),
+      meta: { title: '员工打印' }
     }
   ]
 }

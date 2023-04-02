@@ -5,7 +5,7 @@ import Layout from '@/layout'
 export default {
   // 路由规则
   path: '/setting', // 路由地址
-  name: 'setting', // name属性 后再做权限时候用到
+  // name: 'setting', // name属性 后再做权限时候用到
   component: Layout,
   children: [
     {

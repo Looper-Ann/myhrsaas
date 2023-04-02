@@ -111,8 +111,14 @@ export default {
     async getRoleList() {
       this.loading = true
       const { rows, total } = await getRoleListAPI(this.pageOptions)
+      if (rows.length === 0 && this.pageOptions.page !== 1) {
+        this.pageOptions.page--
+        this.getRoleList()
+        return
+      }
       this.tableData = rows
       this.pageOptions.total = total
+      console.log(rows)
       this.loading = false
     },
     async getCompanyInfo() {

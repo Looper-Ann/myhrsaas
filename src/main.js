@@ -14,13 +14,20 @@ import router from './router'
 
 import '@/icons' // icon
 import '@/permission' // permission control
+import Components from './components'
 import * as directives from '@/directives'
+import * as filters from '@/filters'
 
+Vue.use(Components)
 // 注册自定义指令
 // 遍历所有的导出的指令对象 ，完成自定义全局注册
 Object.keys(directives).forEach(el => {
   // 注册自定义指令
   Vue.directive(el, directives[el])
+})
+
+Object.keys(filters).forEach(el => {
+  Vue.filter(el, filters[el])
 })
 
 /**
