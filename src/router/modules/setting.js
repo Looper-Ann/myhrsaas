@@ -5,7 +5,7 @@ import Layout from '@/layout'
 export default {
   // 路由规则
   path: '/setting', // 路由地址
-  // name: 'setting', // name属性 后再做权限时候用到
+  name: 'settings', // name属性 后再做权限时候用到
   component: Layout,
   children: [
     {
@@ -14,7 +14,7 @@ export default {
       component: () => import('@/views/setting'), // 引入组件
       // 路由元信息， 是一个保存数据的地方
       meta: {
-        title: '设置', // 为什么要有 title  因为左侧导航读取了这里的 title 属性
+        title: '公司设置', // 为什么要有 title  因为左侧导航读取了这里的 title 属性
         icon: 'setting'
       }
     }

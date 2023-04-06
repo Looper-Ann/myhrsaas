@@ -10,7 +10,7 @@
         <tree-tools slot-scope="{ data }" :tree-node="data" @delDepts="getDeparts" @addDept="handleAdd" @editDept="handleEdit" />
       </el-tree>
     </el-card>
-    <add-department :ref="'adddept'" :show-dialog.sync="showDialog" :tree-node="node" @hideDialog="showDialog=false" @onAddSuccess="getDeparts" />
+    <add-department :ref="'adddept'" :show-dialog.sync="showDialog" :tree-node="node" @hideDialog="showDialog = false" @onAddSuccess="getDeparts" />
   </div>
 </template>
 <script>
@@ -49,7 +49,6 @@ export default {
           manager: result.companyManage,
           id: ''
         }
-        console.log(result.depts)
         this.departs = transListToTreeData(result.depts, '')
       } catch (err) {
         this.$message.error('获取信息失败')

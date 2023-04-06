@@ -10,7 +10,7 @@
     <div class="right-menu">
       <el-dropdown class="avatar-container" trigger="click">
         <div class="avatar-wrapper">
-          <img v-imageerror="defaultAvatar" :src="staffPhoto" class="user-avatar">
+          <img v-imageerror="defaultAvatar" :src="staffPhoto" class="user-avatar" />
           <span class="name">{{ name }}</span>
           <i class="el-icon-caret-bottom" />
         </div>
@@ -46,11 +46,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'sidebar',
-      'staffPhoto',
-      'name'
-    ])
+    ...mapGetters(['sidebar', 'staffPhoto', 'name'])
   },
   methods: {
     toggleSideBar() {
@@ -70,7 +66,7 @@ export default {
   overflow: hidden;
   position: relative;
   background: #fff;
-  box-shadow: 0 1px 4px rgba(0, 21, 41, .08);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
   background-image: -webkit-linear-gradient(left, #3d6df8, #5b8cff);
 
   .hamburger-container {
@@ -78,11 +74,11 @@ export default {
     height: 100%;
     float: left;
     cursor: pointer;
-    transition: background .3s;
+    transition: background 0.3s;
     -webkit-tap-highlight-color: transparent;
 
     &:hover {
-      background: rgba(0, 0, 0, .025)
+      background: rgba(0, 0, 0, 0.025);
     }
   }
 
@@ -131,10 +127,10 @@ export default {
 
       &.hover-effect {
         cursor: pointer;
-        transition: background .3s;
+        transition: background 0.3s;
 
         &:hover {
-          background: rgba(0, 0, 0, .025)
+          background: rgba(0, 0, 0, 0.025);
         }
       }
     }

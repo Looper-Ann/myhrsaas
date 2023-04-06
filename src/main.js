@@ -17,6 +17,7 @@ import '@/permission' // permission control
 import Components from './components'
 import * as directives from '@/directives'
 import * as filters from '@/filters'
+import CheckPermission from '@/mixins/checkPermission'
 
 Vue.use(Components)
 // 注册自定义指令
@@ -44,6 +45,7 @@ Object.keys(filters).forEach(el => {
 // 如果想要中文版 element-ui，按如下方式声明
 Vue.use(ElementUI)
 
+Vue.mixin(CheckPermission)
 Vue.config.productionTip = false
 
 new Vue({

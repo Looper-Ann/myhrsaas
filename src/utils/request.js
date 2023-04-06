@@ -41,6 +41,7 @@ request.interceptors.response.use(
   // 成功的回调函数
   result => {
     // axios 将响应体封装进 data 需要将用到的数据解构出来
+    // console.log(result)
     const { data, message, success } = result.data
     // 如果 success 为 true 表明请求成功
     if (success) {

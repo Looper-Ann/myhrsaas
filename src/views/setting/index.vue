@@ -12,7 +12,7 @@
             <el-table-column prop="description" label="描述" />
             <el-table-column label="操作" align="center">
               <template slot-scope="{ row }">
-                <el-button size="small" type="success">分配权限</el-button>
+                <el-button size="small" type="success" @click="assignPermission(row.id)">分配权限</el-button>
                 <el-button size="small" type="primary" @click="handleEdit(row.id)">编辑</el-button>
                 <el-button size="small" type="danger" @click="handleDelete(row.id)">删除</el-button>
               </template>
@@ -20,36 +20,24 @@
           </el-table>
           <el-row type="flex" justify="center" align="middle" style="height: 60px">
             <!-- 分页组件 -->
-            <el-pagination
-              layout="prev,pager,next"
-              :page-size="pageOptions.pagesize"
-              :current-page="pageOptions.page"
-              :total="pageOptions.total"
-              @next-click="handleNextPage"
-              @prev-click="handlePrevPage"
-              @current-change="handleChangePage"
-            />
+            <el-pagination layout="prev,pager,next" :page-size="pageOptions.pagesize" :current-page="pageOptions.page" :total="pageOptions.total" @next-click="handleNextPage" @prev-click="handlePrevPage" @current-change="handleChangePage" />
           </el-row>
         </el-tab-pane>
         <el-tab-pane label="公司信息" name="second">
-          <el-alert
-            title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改"
-            type="info"
-            show-icon
-          />
+          <el-alert title="对公司名称、公司地址、营业执照、公司地区的更新，将使得公司资料被重新审核，请谨慎修改" type="info" show-icon />
           <el-form class="companyForm" :model="companyForm" disabled>
-              <el-form-item label="公司名称" label-width="120px">
-                <el-input v-model="companyForm.name" style="width: 400px" />
-              </el-form-item>
-              <el-form-item label="公司地址" label-width="120px">
-                <el-input v-model="companyForm.companyAddress" style="width: 400px" />
-              </el-form-item>
-              <el-form-item label="邮箱" label-width="120px">
-                <el-input v-model="companyForm.mailbox" style="width: 400px" />
-              </el-form-item>
-              <el-form-item label="备注" label-width="120px">
-                <el-input v-model="companyForm.remarks" style="width: 400px" type="textarea" />
-              </el-form-item>
+            <el-form-item label="公司名称" label-width="120px">
+              <el-input v-model="companyForm.name" style="width: 400px" />
+            </el-form-item>
+            <el-form-item label="公司地址" label-width="120px">
+              <el-input v-model="companyForm.companyAddress" style="width: 400px" />
+            </el-form-item>
+            <el-form-item label="邮箱" label-width="120px">
+              <el-input v-model="companyForm.mailbox" style="width: 400px" />
+            </el-form-item>
+            <el-form-item label="备注" label-width="120px">
+              <el-input v-model="companyForm.remarks" style="width: 400px" type="textarea" />
+            </el-form-item>
           </el-form>
         </el-tab-pane>
       </el-tabs>
@@ -68,11 +56,19 @@
         <el-button type="primary" @click="handleSubmitEdit">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="分配权限" :visible.sync="permissionDialogVisible" @close="handlePermDialogCancel">
+      <el-tree ref="permissionTree" :data="permissionTree" node-key="id" show-checkbox :check-strictly="true" :default-checked-keys="selectCheck" :props="{ label: 'name', children: 'children' }" default-expand-all> </el-tree>
+      <div slot="footer">
+        <el-button @click="handlePermDialogCancel">取 消</el-button>
+        <el-button type="primary" @click="handlePermDialogSubmit">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 <script>
-import { getRoleList as getRoleListAPI, delRoleById, getRoleById, updateRole, createRole } from '@/api/roles'
+import { getRoleList as getRoleListAPI, delRoleById, getRoleById, updateRole, createRole, assignRole } from '@/api/roles'
 import { getCompanyById } from '@/api/company'
+import { getPermissionList } from '@/api/permission'
 import { mapGetters } from 'vuex'
 export default {
   data() {
@@ -81,7 +77,7 @@ export default {
       tableData: [],
       pageOptions: {
         page: 1,
-        pagesize: 5,
+        pagesize: 10,
         total: 0
       },
       loading: false,
@@ -94,7 +90,11 @@ export default {
       roleRules: {
         name: [{ required: true, message: '请输入角色名称', trigger: 'blur' }],
         description: [{ required: true, message: '请输入角色描述', trigger: 'blur' }]
-      }
+      },
+      permissionDialogVisible: false,
+      permissionTree: [],
+      roleId: '',
+      selectCheck: []
     }
   },
   computed: {
@@ -169,6 +169,47 @@ export default {
           this.getRoleList()
           this.showDialog = false
         }
+      })
+    },
+    async getPermissionTree() {
+      const res = await getPermissionList()
+      console.log(res)
+      function atot(array, ppointer) {
+        const arr = []
+        array.forEach(el => {
+          if (el.pid === ppointer) {
+            const children = atot(array, el.id)
+            if (children.length) {
+              el.children = children
+            }
+            arr.push(el)
+          }
+        })
+        return arr
+      }
+      this.permissionTree = atot(res, '0')
+    },
+    async assignPermission(id) {
+      this.roleId = id
+      await this.getPermissionTree()
+      const { permIds } = await getRoleById(id)
+      console.log('perms:' + permIds)
+      this.selectCheck = permIds
+      this.permissionDialogVisible = true
+    },
+    handlePermDialogCancel() {
+      this.roleId = ''
+      this.selectCheck = []
+      this.permissionDialogVisible = false
+    },
+    async handlePermDialogSubmit() {
+      await assignRole({
+        id: this.roleId,
+        permIds: this.$refs.permissionTree.getCheckedKeys()
+      }).then(res => {
+        console.log(res)
+        this.$message.success('操作成功!')
+        this.permissionDialogVisible = false
       })
     }
   }

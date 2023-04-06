@@ -23,10 +23,18 @@ router.beforeEach(async (to, from, next) => {
       // 如果没有用户ID
       if (!store.getters.userId) {
         // 使用 store dispatch 获取用户信息 使用 await 顺序执行后续逻辑，避免出错
-        await store.dispatch('user/getUserInfo')
+        const { roles } = await store.dispatch('user/getUserInfo')
+        // 筛选用户的可用路由
+        const routes = await store.dispatch('permission/filterRoutes', roles.menus)
+        // routes 就是筛选得到的动态路由
+        // 动态路由添加到路由表中
+        router.addRoutes([...routes, { path: '*', redirect: '/404', hidden: true }]) // 添加动态路由到路由表
+        // 添加完动态路由之后
+        next(to.path) // 相当于跳到对应地址 相当于多做一次跳转
+      } else {
+        // 如果不是登录页，继续放行
+        next()
       }
-      // 如果不是登录页，继续放行
-      next()
     }
     // 没有 token
   } else {

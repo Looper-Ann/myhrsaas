@@ -43,7 +43,7 @@
               <el-button type="text" size="small">转正</el-button>
               <el-button type="text" size="small">调岗</el-button>
               <el-button type="text" size="small">离职</el-button>
-              <el-button type="text" size="small">角色</el-button>
+              <el-button type="text" size="small" @click="assignRole(row.id)">角色</el-button>
               <el-button type="text" size="small" @click="delEmployee(row.id)">删除</el-button>
             </div>
           </template>
@@ -60,6 +60,7 @@
         <canvas ref="myCanvas" />
       </el-row>
     </el-dialog>
+    <assignRoleVue ref="assignRole" :user-id="assignRoleId" :show-role-pannel.sync="showRolePannel" />
   </div>
 </template>
 <script>
@@ -68,9 +69,10 @@ import { getEmployeesList as getEmployeesListAPI, delEmployee as delEmployeeAPI 
 import EmployeeEnum from '@/api/constant/employees'
 import AddEmpolyee from './components/add-employee.vue'
 import Qrcode from 'qrcode'
+import assignRoleVue from './components/assign-role.vue'
 // import xlsx from 'xlsx'
 export default {
-  components: { AddEmpolyee },
+  components: { AddEmpolyee, assignRoleVue },
   data() {
     return {
       tableData: [],
@@ -81,7 +83,19 @@ export default {
       total: 0,
       loading: false,
       showDialog: false,
-      showQRCode: false
+      showQRCode: false,
+      showRolePannel: false,
+      assignRoleId: ''
+    }
+  },
+  watch: {
+    showRolePannel: {
+      immediate: true,
+      handler(flag) {
+        if (!flag) {
+          this.assignRoleId = ''
+        }
+      }
     }
   },
   created() {
@@ -167,6 +181,11 @@ export default {
       } else {
         this.$message.warning('该用户未上传头像!')
       }
+    },
+    async assignRole(id) {
+      this.assignRoleId = id
+      await this.$refs.assignRole.getRoleIdList(id)
+      this.showRolePannel = true
     }
   }
 }

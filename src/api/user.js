@@ -26,3 +26,11 @@ export const getUserDetailById = id =>
   request({
     url: `/sys/user/${id}`
   })
+
+// 给员工分配角色
+export const assignRoleById = data =>
+  request({
+    method: 'PUT',
+    url: `/sys/user/assignRoles`,
+    data
+  })

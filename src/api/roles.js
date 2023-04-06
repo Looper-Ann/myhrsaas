@@ -35,3 +35,11 @@ export const createRole = data =>
     url: `/sys/role`,
     data
   })
+
+// 给角色分配权限
+export const assignRole = data =>
+  request({
+    method: 'PUT',
+    url: '/sys/role/assignPrem',
+    data
+  })
